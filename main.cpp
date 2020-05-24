@@ -1,8 +1,3 @@
-//Was noch fehlt:
-//absoluter Pfad soll angegeben werden auch wenn nach relativem Pfad gesucht wird
-//Makefile (kein Plan was des ist)
-//ausgabe erfolgt auf stdout und unsortiert.. blabla (ka was genau gemeint ist)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -171,6 +166,9 @@ int main(int argc, char *argv[])
         //zweites argument = filename1, filename2 ... (aktuelles File nach dem gesucht werden soll)
         char *currentFile = argv[optind + 1 + i];
 
+        char current_path[PATH_MAX];
+        realpath(argv[optind], current_path);
+
         //Kindrpozess -> fork
         pid_t myPid = fork();
 
@@ -179,7 +177,7 @@ int main(int argc, char *argv[])
         if (myPid == 0)
         {
             //aufruf der searchfunktion 
-            if (mySearch(currentFile, firstPath, Rflag, iflag) != 1) //prüfen ob file gefunden wurde
+            if (mySearch(currentFile, current_path, Rflag, iflag) != 1) //prüfen ob file gefunden wurde
             {
                 pid_t childPID = getpid();
                 printf("Konnte die Datei %s leider nicht finden", currentFile);
